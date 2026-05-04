@@ -66,7 +66,7 @@ function Contact() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "3d3e6c0c-7e3e-4f1e-961a-0f4b8f0f0f0f", // Placeholder: User needs to get their own key
+          access_key: "f1fb62e1-fb9f-4ffc-920a-733227893545", // Verified Web3Forms key for kamugishaosbert7@gmail.com
           name: fd.get("name"),
           email: fd.get("email"),
           message: fd.get("message"),
