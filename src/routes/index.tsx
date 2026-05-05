@@ -40,12 +40,26 @@ function Home() {
   const [profileImage, setProfileImage] = useState(heroImg);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    const saved = localStorage.getItem("profile-image");
+    if (saved) {
+      setProfileImage(saved);
+    }
+  }, []);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file);
-      setProfileImage(url);
-      toast.success("Profile picture updated locally!");
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64 = event.target?.result as string;
+        if (base64) {
+          setProfileImage(base64);
+          localStorage.setItem("profile-image", base64);
+          toast.success("Profile picture updated and saved!");
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 

@@ -38,6 +38,29 @@ const channels = [
 
 function Contact() {
   const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("contact-form-draft");
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse form draft", e);
+      }
+    }
+  }, []);
+
+  // Save to localStorage on change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      localStorage.setItem("contact-form-draft", JSON.stringify(next));
+      return next;
+    });
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,7 +81,6 @@ function Contact() {
     setSubmitting(true);
 
     try {
-      // Using Web3Forms for automatic email delivery to kamugishaosbert7@gmail.com
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: {
@@ -66,7 +88,7 @@ function Contact() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "f1fb62e1-fb9f-4ffc-920a-733227893545", // Verified Web3Forms key for kamugishaosbert7@gmail.com
+          access_key: "f1fb62e1-fb9f-4ffc-920a-733227893545",
           name: fd.get("name"),
           email: fd.get("email"),
           message: fd.get("message"),
@@ -79,6 +101,8 @@ function Contact() {
       if (result.success) {
         toast.success("Message sent! I'll receive it at kamugishaosbert7@gmail.com shortly.");
         form.reset();
+        setFormData({ name: "", email: "", message: "" });
+        localStorage.removeItem("contact-form-draft");
       } else {
         toast.error("Something went wrong. Please try again or use direct email.");
       }
@@ -129,6 +153,8 @@ function Contact() {
                   name="name"
                   required
                   maxLength={100}
+                  value={formData.name}
+                  onChange={handleChange}
                   className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/30"
                   placeholder="Your full name"
                 />
@@ -143,6 +169,8 @@ function Contact() {
                   type="email"
                   required
                   maxLength={255}
+                  value={formData.email}
+                  onChange={handleChange}
                   className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/30"
                   placeholder="you@example.com"
                 />
@@ -157,6 +185,8 @@ function Contact() {
                   required
                   rows={5}
                   maxLength={2000}
+                  value={formData.message}
+                  onChange={handleChange}
                   className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 text-sm outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/30"
                   placeholder="Tell me about your project..."
                 />

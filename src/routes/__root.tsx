@@ -43,6 +43,22 @@ export const Route = createRootRoute({
     ],
     scripts: [
       {
+        children: `
+          (function() {
+            try {
+              var theme = localStorage.getItem('theme');
+              var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+              if (!theme && supportDarkMode) theme = 'dark';
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              } else {
+                document.documentElement.classList.remove('dark');
+              }
+            } catch (e) {}
+          })();
+        `,
+      },
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
@@ -63,7 +79,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
