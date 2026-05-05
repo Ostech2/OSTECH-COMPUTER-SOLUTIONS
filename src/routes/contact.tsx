@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { Mail, Phone, Send } from "lucide-react";
 import { GitHubIcon, LinkedInIcon, WhatsAppIcon, TikTokIcon } from "@/components/portfolio/brand-icons";

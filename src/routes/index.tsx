@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Download, Mail, Sparkles, Code2, Database, Brain, Wrench, Camera, Network, FileText } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { PageShell } from "@/components/portfolio/page-shell";
